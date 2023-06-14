@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.poppins{
+    font-family: 'Poppins',sans-serif;
+}
+.category .active {
+    font-weight: 500;
+    color: #27AE60;
+}
+.singleProductGridView:hover .singleProductAdd{
+    display: block;
+}
+.singleProductAdd{
+    display: none;
+}
