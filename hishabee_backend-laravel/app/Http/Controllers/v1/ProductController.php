@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\v1;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 use App\Models\Product;
 use App\Service\v1\ProductResponseService;
 use Illuminate\Http\Request;
@@ -14,8 +15,14 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::with('category')->get();
-        return response(ProductResponseService::collection($products));
+        $products = Product::with('category')->latest();
+        if(\request()->has('id') && (int)\request()->get('id') > 0){
+            $category = Category::with('parentCategory.parentCategory')->findOrFail((int)\request()->get('id'),['id','name','parent_id']);
+            $products = $products->where('category_id',(int)\request()->get('id'));
+        }
+        $products = $products->limit(50)->get();
+
+        return response(['category'=>$category??null, 'products'=>ProductResponseService::collection($products)]);
     }
 
     /**
